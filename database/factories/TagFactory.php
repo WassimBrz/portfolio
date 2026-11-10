@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,9 +17,12 @@ class TagFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+{
+    $name = fake()->unique()->word();
+
+    return [
+        'name' => $name,
+        'slug' => Str::slug($name),
+    ];
+}
 }
