@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
+import DeleteProjectDialog from "@/components/DeleteProjectDialog.vue";
 import { Button } from "@/components/ui/button";
 import {
     Table,
@@ -9,7 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { create, index } from "@/routes/admin/projects";
+import { create, index, edit } from "@/routes/admin/projects";
 
 defineOptions({
     layout: {
@@ -46,6 +47,12 @@ defineProps({
                         project.title
                     }}</TableCell>
                     <TableCell>/projets/{{ project.slug }}</TableCell>
+                    <div class="flex items-center justify-end gap-2">
+                        <Button as-child variant="outline" size="sm">
+                            <Link :href="edit(project)">Modifier</Link>
+                        </Button>
+                        <DeleteProjectDialog :project="project" />
+                    </div>
                 </TableRow>
             </TableBody>
         </Table>
