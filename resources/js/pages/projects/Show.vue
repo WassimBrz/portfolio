@@ -16,12 +16,17 @@ defineProps({
             v-if="project.cover_url"
             :src="project.cover_url"
             alt=""
-            width="600"
+            width="1200"
+            height="675"
+            class="aspect-video w-full rounded-lg object-cover"
         />
         <ul>
             <li v-for="tag in project.tags" :key="tag">{{ tag }}</li>
         </ul>
-        <div class="prose dark:prose-invert" v-html="project.content"></div>
+        <div
+            class="prose max-w-none dark:prose-invert prose-a:text-brand"
+            v-html="project.content"
+        ></div>
         <a v-if="project.demo_url" :href="project.demo_url">Démo</a>
         <a v-if="project.repo_url" :href="project.repo_url">Code</a>
     </article>

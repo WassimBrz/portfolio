@@ -4,6 +4,11 @@
 
 @plugin '@tailwindcss/typography';
 
+@theme {
+    --color-brand: oklch(0.55 0.2 265);
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 

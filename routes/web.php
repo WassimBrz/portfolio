@@ -4,13 +4,10 @@ use App\Http\Controllers\Admin;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\HomeController;
 
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'author' => 'Wassim Bourhanzour', // votre prénom et votre nom
-    ]);
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');

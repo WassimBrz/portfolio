@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
 import { show } from "@/routes/projects";
+import ProjectCard from "@/components/ProjectCard.vue";
 
 defineProps({
     projects: Array,
@@ -10,19 +11,15 @@ defineProps({
 <template>
     <Head title="Projets" />
 
-    <h1>Mes projets</h1>
+    <h1 class="py-8 font-display text-3xl font-bold md:text-4xl">
+        Mes projets
+    </h1>
 
-    <ul>
-        <li v-for="project in projects" :key="project.slug">
-            <img
-                v-if="project.cover_url"
-                :src="project.cover_url"
-                alt=""
-                width="300"
-            />
-            <h2>{{ project.title }}</h2>
-            <p>{{ project.summary }}</p>
-            <Link :href="show(project)">Voir le projet</Link>
-        </li>
-    </ul>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <ProjectCard
+            v-for="project in projects"
+            :key="project.slug"
+            :project="project"
+        />
+    </div>
 </template>
