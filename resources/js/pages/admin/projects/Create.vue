@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { create, index } from "@/routes/admin/projects";
+import RichTextEditor from "@/components/RichTextEditor.vue";
 
 defineOptions({
     layout: {
@@ -46,6 +47,12 @@ defineProps({
                 <Label for="summary">Résumé</Label>
                 <Textarea id="summary" name="summary" rows="3" />
                 <InputError :message="errors.summary" />
+            </div>
+
+            <div class="grid gap-2">
+                <Label>Contenu</Label>
+                <RichTextEditor name="content" label="Contenu du projet" />
+                <InputError :message="errors.content" />
             </div>
 
             <div class="grid gap-2">
