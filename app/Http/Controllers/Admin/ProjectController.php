@@ -16,7 +16,7 @@ class ProjectController extends Controller
     public function index(): Response
     {
         return Inertia::render('admin/projects/Index', [
-            'projects' => Project::orderBy('position')->get(['id', 'title', 'slug']),
+            'projects' => Project::orderBy('position')->get(['id', 'title', 'slug', 'published_at']),
         ]);
     }
     public function create(): Response
@@ -84,6 +84,20 @@ class ProjectController extends Controller
         $project->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Projet supprimé.']);
+
+        return to_route('admin.projects.index');
+    }
+
+    public function togglePublished(Project $project): RedirectResponse
+    {
+        $project->update([
+            'published_at' => $project->published_at ? null : now(),
+        ]);
+
+        Inertia::flash('toast', [
+            'type' => 'success',
+            'message' => $project->published_at ? 'Projet publié.' : 'Projet repassé en brouillon.',
+        ]);
 
         return to_route('admin.projects.index');
     }

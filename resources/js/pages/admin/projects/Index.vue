@@ -11,6 +11,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { create, index, edit } from "@/routes/admin/projects";
+import { Badge } from "@/components/ui/badge";
+import ProjectController from "@/actions/App/Http/Controllers/Admin/ProjectController";
 
 defineOptions({
     layout: {
@@ -39,6 +41,7 @@ defineProps({
                 <TableRow>
                     <TableHead>Titre</TableHead>
                     <TableHead>Adresse</TableHead>
+                    <TableHead>État</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -47,12 +50,31 @@ defineProps({
                         project.title
                     }}</TableCell>
                     <TableCell>/projets/{{ project.slug }}</TableCell>
-                    <div class="flex items-center justify-end gap-2">
+                    <TableCell>
+                        <Badge v-if="project.published_at">Publié</Badge>
+                        <Badge v-else variant="secondary">Brouillon</Badge>
+                    </TableCell>
+                    <TableCell>
+                        <Form
+                            v-bind="
+                                ProjectController.togglePublished.form(project)
+                            "
+                            class="inline"
+                        >
+                            <Button type="submit" variant="outline" size="sm">
+                                {{
+                                    project.published_at
+                                        ? "Dépublier"
+                                        : "Publier"
+                                }}
+                            </Button>
+                        </Form>
+
                         <Button as-child variant="outline" size="sm">
                             <Link :href="edit(project)">Modifier</Link>
                         </Button>
                         <DeleteProjectDialog :project="project" />
-                    </div>
+                    </TableCell>
                 </TableRow>
             </TableBody>
         </Table>

@@ -63,7 +63,7 @@ class ProjectSeeder extends Seeder
             'cover_path' => 'images/carnet-recettes.jpg',
             'demo_url' => null,
             'repo_url' => 'https://github.com/exemple/carnet-recettes',
-            'published_at' => now(),
+            'published_at' => null,
             'position' => 3,
         ]);
         $recipes->tags()->attach([$laravel->id]);
