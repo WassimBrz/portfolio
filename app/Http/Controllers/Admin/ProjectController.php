@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -27,8 +28,14 @@ class ProjectController extends Controller
 
     public function store(ProjectRequest $request): RedirectResponse
     {
+        $data = $request->safe()->except(['tags', 'cover']);
+
+        if ($request->hasFile('cover')) {
+            $data['cover_path'] = $request->file('cover')->store('projects', 'public');
+        }
+
         $project = Project::create([
-            ...$request->safe()->except('tags'),
+            ...$data,
             'position' => Project::max('position') + 1,
         ]);
 
@@ -43,12 +50,7 @@ class ProjectController extends Controller
     {
         return Inertia::render('admin/projects/Edit', [
             'project' => [
-                'id' => $project->id,
-                'title' => $project->title,
-                'summary' => $project->summary,
-                'content' => $project->content,
-                'demo_url' => $project->demo_url,
-                'repo_url' => $project->repo_url,
+                ...$project->only('id', 'title', 'summary', 'content', 'demo_url', 'repo_url', 'cover_url'),
                 'tags' => $project->tags()->pluck('tags.id'),
             ],
             'tags' => Tag::orderBy('name')->get(['id', 'name']),
@@ -57,17 +59,28 @@ class ProjectController extends Controller
 
     public function update(ProjectRequest $request, Project $project): RedirectResponse
     {
-        $project->update($request->safe()->except('tags'));
+        $data = $request->safe()->except(['tags', 'cover']);
 
-        $project->tags()->sync($request->validated('tags', []));
+        if ($request->hasFile('cover')) {
+            if ($project->cover_path && str_starts_with($project->cover_path, 'projects/')) {
+                Storage::disk('public')->delete($project->cover_path);
+            }
+
+            $data['cover_path'] = $request->file('cover')->store('projects', 'public');
+        }
+
+        $project->update($data);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Projet modifié.']);
-
         return to_route('admin.projects.index');
     }
 
     public function destroy(Project $project): RedirectResponse
     {
+        if ($project->cover_path && str_starts_with($project->cover_path, 'projects/')) {
+            Storage::disk('public')->delete($project->cover_path);
+        }
+
         $project->delete();
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Projet supprimé.']);

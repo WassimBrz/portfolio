@@ -33,7 +33,7 @@ defineProps({
 
         <Form
             v-bind="ProjectController.update.form(project)"
-            v-slot="{ errors, processing }"
+            v-slot="{ errors, processing, progress }"
             class="space-y-6"
             novalidate
         >
@@ -74,6 +74,26 @@ defineProps({
                     :default-value="project.repo_url"
                 />
                 <InputError :message="errors.repo_url" />
+            </div>
+
+            <div class="grid gap-2">
+                <Label for="cover">Image de couverture</Label>
+                <img
+                    v-if="project.cover_url"
+                    :src="project.cover_url"
+                    alt=""
+                    class="w-48 rounded"
+                />
+                <Input id="cover" name="cover" type="file" accept="image/*" />
+                <progress
+                    v-if="progress"
+                    :value="progress.percentage"
+                    max="100"
+                    class="w-full"
+                >
+                    {{ progress.percentage }} %
+                </progress>
+                <InputError :message="errors.cover" />
             </div>
 
             <fieldset class="grid gap-2">
